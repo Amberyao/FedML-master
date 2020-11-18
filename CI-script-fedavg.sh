@@ -57,18 +57,18 @@ cd ./../../../
 
 # assert that, for full batch and epochs=1 and when the product of global and group comm. round is fixed,
 # the accuracy of hierarchical federated learning is equal to that of centralized training, regardless of the number of groups
-cd ./fedml_experiments/standalone/hierarchical_fl
-sh run_standalone_pytorch.sh 0 1000 1000 -1 mnist ./../../../data/mnist lr hetero 0.03 sgd random 2 5 2 1
+# cd ./fedml_experiments/standalone/hierarchical_fl
+# sh run_standalone_pytorch.sh 0 1000 1000 -1 mnist ./../../../data/mnist lr hetero 0.03 sgd random 2 5 2 1
 # shellcheck disable=SC2002
-hierarchical_fl_full_train_acc=$(cat wandb/latest-run/files/wandb-summary.json | python -c "import sys, json; print(json.load(sys.stdin)['Train/Acc'])")
+# hierarchical_fl_full_train_acc=$(cat wandb/latest-run/files/wandb-summary.json | python -c "import sys, json; print(json.load(sys.stdin)['Train/Acc'])")
 # shellcheck disable=SC2046
-assert_eq $(round "$centralized_full_train_acc" 3) $(round "$hierarchical_fl_full_train_acc" 3)
-sh run_standalone_pytorch.sh 0 1000 1000 -1 mnist ./../../../data/mnist lr hetero 0.03 sgd random 2 2 5 1
+# assert_eq $(round "$centralized_full_train_acc" 3) $(round "$hierarchical_fl_full_train_acc" 3)
+#　sh run_standalone_pytorch.sh 0 1000 1000 -1 mnist ./../../../data/mnist lr hetero 0.03 sgd random 2 2 5 1
 # shellcheck disable=SC2002
-hierarchical_fl_full_train_acc=$(cat wandb/latest-run/files/wandb-summary.json | python -c "import sys, json; print(json.load(sys.stdin)['Train/Acc'])")
+# hierarchical_fl_full_train_acc=$(cat wandb/latest-run/files/wandb-summary.json | python -c "import sys, json; print(json.load(sys.stdin)['Train/Acc'])")
 # shellcheck disable=SC2046
-assert_eq $(round "$centralized_full_train_acc" 3) $(round "$hierarchical_fl_full_train_acc" 3)
-cd ./../../../
+# assert_eq $(round "$centralized_full_train_acc" 3) $(round "$hierarchical_fl_full_train_acc" 3)
+#　cd ./../../../
 
 
 # 2. MNIST distributed FedAvg 分布式版本

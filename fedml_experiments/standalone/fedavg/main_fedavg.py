@@ -15,8 +15,7 @@ from fedml_api.data_preprocessing.fed_shakespeare.data_loader import load_partit
 from fedml_api.data_preprocessing.stackoverflow_lr.data_loader import load_partition_data_federated_stackoverflow_lr
 from fedml_api.data_preprocessing.stackoverflow_nwp.data_loader import load_partition_data_federated_stackoverflow_nwp
 
-from fedml_api.model.cv.mobilenet import mobilenet
-from fedml_api.model.cv.resnet import resnet56
+
 from fedml_api.model.cv.cnn import CNN_DropOut
 from fedml_api.data_preprocessing.FederatedEMNIST.data_loader import load_partition_data_federated_emnist
 from fedml_api.model.nlp.rnn import RNN_OriginalFedAvg, RNN_StackOverFlow
