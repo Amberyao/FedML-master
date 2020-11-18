@@ -9,10 +9,10 @@ from fedml_api.model.linear.lr import LogisticRegression
 
 
 def read_data(train_data_dir, test_data_dir):
-    '''parses data in given train and test data directories
+    """parses data in given train and test data directories
 
     assumes:
-    - the data in the input directories are .json files with 
+    - the data in the input directories are .json files with
         keys 'users' and 'user_data'
     - the set of train set users is the same as the set of test set users
 
@@ -21,7 +21,7 @@ def read_data(train_data_dir, test_data_dir):
         groups: list of group ids; empty list if none found
         train_data: dictionary of train data
         test_data: dictionary of test data
-    '''
+    """
     clients = []
     groups = []
     train_data = {}
@@ -52,10 +52,10 @@ def read_data(train_data_dir, test_data_dir):
 
 
 def batch_data(data, batch_size):
-    '''
+    """
     data is a dict := {'x': [numpy array], 'y': [numpy array]} (on one client)
     returns x, y, which are both numpy array of length: batch_size
-    '''
+    """
     data_x = data['x']
     data_y = data['y']
 
