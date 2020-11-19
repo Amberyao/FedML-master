@@ -41,7 +41,6 @@ class Client:
         self.model.load_state_dict(w_global)
         self.model.to(self.device)
 
-
         # train and update
         if self.args.client_optimizer == "sgd":
             optimizer = torch.optim.SGD(self.model.parameters(), lr=self.args.lr)
