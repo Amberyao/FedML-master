@@ -18,17 +18,17 @@ DISTRIBUTION=$8
 
 ROUND=$9
 
-# shellcheck disable=SC1037
-EPOCH=$10
 
-# shellcheck disable=SC1037
-LR=$11
+EPOCH=${10}
 
-# shellcheck disable=SC1037
-OPT=$12
 
-# shellcheck disable=SC1037
-CI=$13
+LR=${11}
+
+
+OPT=${12}
+
+
+CI=${13}
 
 python3 ./main_fedavg.py \
 --gpu "$GPU" \
