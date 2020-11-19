@@ -84,8 +84,8 @@ def add_args(parser):
 
     parser.add_argument('--ci', type=int, default=0,
                         help='CI')
-    args = parser.parse_args()
-    return args
+
+    return parser
 
 
 def load_data(args, dataset_name):
