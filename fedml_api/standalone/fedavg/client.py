@@ -6,7 +6,7 @@ from torch import nn
 
 class Client:
 
-    def __init__(self, client_idx, local_training_data, local_test_data, local_sample_number, args, device):
+    def __init__(self, client_idx, local_training_data, local_test_data, local_sample_number, args, device, model):
         self.client_idx = client_idx
         self.local_training_data = local_training_data
         self.local_test_data = local_test_data
@@ -14,6 +14,7 @@ class Client:
         logging.info("self.local_sample_number = " + str(self.local_sample_number))
 
         self.args = args
+        self.model = model
         self.device = device
 
         self.criterion = nn.CrossEntropyLoss().to(device)
@@ -27,14 +28,17 @@ class Client:
     def get_sample_number(self):
         return self.local_sample_number
 
-    def train(self, net):
-        net.train()
+    def train(self, w_global):
+        self.model.load_state_dict(w_global)
+        self.model.to(self.device)
+
+
         # train and update
         if self.args.client_optimizer == "sgd":
-            optimizer = torch.optim.SGD(net.parameters(), lr=self.args.lr)
+            optimizer = torch.optim.SGD(self.model.parameters(), lr=self.args.lr)
         else:
-            optimizer = torch.optim.Adam(filter(lambda p: p.requires_grad, net.parameters()), lr=self.args.lr,
-                                              weight_decay=self.args.wd, amsgrad=True)
+            optimizer = torch.optim.Adam(filter(lambda p: p.requires_grad, self.model.parameters()), lr=self.args.lr,
+                                         weight_decay=self.args.wd, amsgrad=True)
 
         epoch_loss = []
         for epoch in range(self.args.epochs):
@@ -43,8 +47,8 @@ class Client:
                 x, labels = x.to(self.device), labels.to(self.device)
                 # logging.info("x.size = " + str(x.size()))
                 # logging.info("labels.size = " + str(labels.size()))
-                net.zero_grad()
-                log_probs = net(x)
+                self.model.zero_grad()
+                log_probs = self.model(x)
                 loss = self.criterion(log_probs, labels)
                 loss.backward()
 
@@ -57,14 +61,21 @@ class Client:
                 #            100. * (batch_idx + 1) / len(self.local_training_data), loss.item()))
                 batch_loss.append(loss.item())
             epoch_loss.append(sum(batch_loss) / len(batch_loss))
+
             # logging.info('Client Index = {}\tEpoch: {}\tLoss: {:.6f}'.format(
             #     self.client_idx, epoch, sum(epoch_loss) / len(epoch_loss)))
-        return net.cpu().state_dict(), sum(epoch_loss) / len(epoch_loss)
+        return self.model.cpu().state_dict(), sum(epoch_loss) / len(epoch_loss)
 
     def local_test(self, model_global, b_use_test_dataset=False):
         model_global.eval()
         model_global.to(self.device)
-        test_loss = test_acc = test_total = 0.
+        metrics = {
+            'test_correct': 0,
+            'test_loss': 0,
+            'test_precision': 0,
+            'test_recall': 0,
+            'test_total': 0
+        }
         if b_use_test_dataset:
             test_data = self.local_test_data
         else:
@@ -75,11 +86,20 @@ class Client:
                 target = target.to(self.device)
                 pred = model_global(x)
                 loss = self.criterion(pred, target)
-                _, predicted = torch.max(pred, -1)
-                correct = predicted.eq(target).sum()
+                if self.args.dataset == "stackoverflow_lr":
+                    predicted = (pred > .5).int()
+                    correct = predicted.eq(target).sum(axis=-1).eq(target.size(1)).sum()
+                    true_positive = ((target * predicted) > .1).int().sum(axis=-1)
+                    precision = true_positive / (predicted.sum(axis=-1) + 1e-13)
+                    recall = true_positive / (target.sum(axis=-1) + 1e-13)
+                    metrics['test_precision'] += precision.sum().item()
+                    metrics['test_recall'] += recall.sum().item()
+                else:
+                    _, predicted = torch.max(pred, -1)
+                    correct = predicted.eq(target).sum()
 
-                test_acc += correct.item()
-                test_loss += loss.item() * target.size(0)
-                test_total += target.size(0)
+                metrics['test_correct'] += correct.item()
+                metrics['test_loss'] += loss.item() * target.size(0)
+                metrics['test_total'] += target.size(0)
 
-        return test_acc, test_total, test_loss
+        return metrics
