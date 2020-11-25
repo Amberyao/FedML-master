@@ -8,6 +8,7 @@ import re
 
 # Vocabulary re-used from the Federated Learning for Text Generation tutorial.
 # https://www.tensorflow.org/federated/tutorials/federated_learning_for_text_generation
+# A fixed vocabularly of ASCII chars that occur in the works of Shakespeare and Dickens:
 CHAR_VOCAB = list(
     'dhlptx@DHLPTX $(,048cgkoswCGKOSW[_#\'/37;?bfjnrvzBFJNRVZ"&*.26:\naeimquyAEIMQUY]!%)-159\r'
 )

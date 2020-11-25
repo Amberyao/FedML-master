@@ -1,4 +1,5 @@
 import torch.nn as nn
+import torch
 
 
 class RNN_OriginalFedAvg(nn.Module):
@@ -22,7 +23,9 @@ class RNN_OriginalFedAvg(nn.Module):
         self.fc = nn.Linear(hidden_size, vocab_size)
 
     def forward(self, input_seq):
-        embeds = self.embeddings(input_seq)
+        # input_seq = input_seq.to(torch.int64)
+        embeds = self.embeddings(input_seq.long())
+        # embeds = self.embeddings(input_seq)
         # Note that the order of mini-batch is random so there is no hidden relationship among batches.
         # So we do not input the previous batch's hidden state,
         # leaving the first hidden state zero `self.lstm(embeds, None)`.

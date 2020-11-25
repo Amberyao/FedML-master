@@ -143,7 +143,11 @@ def main():
     train_data_local_num_dict, train_data_local_dict, test_data_local_dict, \
     class_num = load_partition_data_shakespeare(batch_size)
 
-    model = RNN_OriginalFedAvg().to(device)
+    print(client_num)
+    print(train_data_local_num_dict)
+
+    # model = RNN_OriginalFedAvg().to(device)
+    model = RNN_OriginalFedAvg()
 
     # Loss and Optimizer
     # Softmax is internally computed.
@@ -154,13 +158,21 @@ def main():
     # Training the Model
     for epoch in range(num_epochs):
         for i, (x, labels) in enumerate(train_data_global):
-            x = x.to(device)
-            labels = labels.to(device)
+            # x = x.to(device)
+            # x = torch.LongTensor() tensor([], dtype=torch.int64)
+            # print(x)
+            # labels = labels.to(device)
+            labels = labels.long()
 
             # Forward + Backward + Optimize
             optimizer.zero_grad()
             output = model(x)
+            # torch.Size([10.90]) torch.FloatTensor
+            # print(output.size(), output.type())
+            # torch.Size[10]  torch.LongTensor
+            # print(labels.size(), labels.type())
             loss = criterion(output, labels)
+            # print(loss)
             loss.backward()
             optimizer.step()
 
@@ -173,14 +185,17 @@ def main():
         correct = 0
         total = 0
         for x, labels in test_data_global:
-            x = x.to(device)
-            labels = labels.to(device)
+            # x = x.to(device)
+            # labels = labels.to(device)
+            x = x
+            labels = labels
             outputs = model(x)
             _, predicted = torch.max(outputs.data, -1)
             total += labels.size(0)
             correct += (predicted == labels).sum()
             # 52% in the last round
             print('Accuracy of the model: %d %%' % (100 * correct // total))
+            # Accuracy of the model: 60 %
 
 if __name__ == '__main__':
     main()

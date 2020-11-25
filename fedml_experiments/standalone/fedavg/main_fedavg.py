@@ -36,8 +36,12 @@ def add_args(parser):
     """
     parser : argparse.ArgumentParser
     return a parser added with args required by fit
+
+    ArgumentParser ——参数解析工具 通过命令行运行python脚本时，可通过ArgumentParser来高效地接受并解析命令行参数
     """
     # Training settings
+    # add_argument（）添加参数选项 arugment_name type(参数类型) default(参数默认值) help(提示函数的作用)
+    # metavar - 在 usage 说明中的参数名称，对于必选参数默认就是参数名称，对于可选参数默认是全大写的参数名称.
     parser.add_argument('--model', type=str, default='resnet56', metavar='N',
                         help='neural network used in training')
 
@@ -54,7 +58,7 @@ def add_args(parser):
                         help='partition alpha (default: 0.5)')
 
     parser.add_argument('--batch_size', type=int, default=128, metavar='N',
-                        help='input batch size for training (default: 64)')
+                        help='input batch size for training (default: 128')
 
     parser.add_argument('--client_optimizer', type=str, default='adam',
                         help='SGD with momentum; adam')

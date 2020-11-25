@@ -27,9 +27,11 @@ def read_data(train_data_dir, test_data_dir):
     train_data = {}
     test_data = {}
 
+    # os.listdir() 方法用于返回指定的文件夹包含的文件或文件夹的名字的列表
     train_files = os.listdir(train_data_dir)
     train_files = [f for f in train_files if f.endswith('.json')]
     for f in train_files:
+        # os.path.join()函数：连接两个或更多的路径名组件
         file_path = os.path.join(train_data_dir, f)
         with open(file_path, 'r') as inf:
             cdata = json.load(inf)
@@ -68,6 +70,7 @@ def batch_data(data, batch_size):
 
     # loop through mini-batches
     batch_data = list()
+    # range() 函数默认将序列递增 1，但是可以通过添加第三个参数来指定增量值：range(2, 30, 3)
     for i in range(0, len(data_x), batch_size):
         batched_x = data_x[i:i + batch_size]
         batched_y = data_y[i:i + batch_size]
@@ -92,6 +95,7 @@ def load_partition_data_mnist(batch_size):
     train_data_global = list()
     test_data_global = list()
     client_idx = 0
+    # zip() 函数用于将可迭代的对象作为参数，将对象中对应的元素打包成一个个元组，然后返回由这些元组组成的列表。
     for u, g in zip(users, groups):
         user_train_data_num = len(train_data[u]['x'])
         user_test_data_num = len(test_data[u]['x'])
@@ -129,11 +133,17 @@ def main():
     torch.manual_seed(10)
 
     device = torch.device("cuda:0")
+    print(device)
     client_num, train_data_num, test_data_num, train_data_global, test_data_global, \
     train_data_local_num_dict, train_data_local_dict, test_data_local_dict, \
     class_num = load_partition_data_mnist(batch_size)
+    # dataset = [client_num, train_data_num, test_data_num, train_data_global, test_data_global,
+    #           train_data_local_num_dict, train_data_local_dict, test_data_local_dict, class_num]
+    print(client_num)
+    print(train_data_local_num_dict)
 
-    model = LogisticRegression(input_size, num_classes).to(device)
+    model = LogisticRegression(input_size, num_classes)
+    # model = LogisticRegression(input_size, num_classes).to(device)
 
     # Loss and Optimizer
     # Softmax is internally computed.
@@ -144,9 +154,11 @@ def main():
     # Training the Model
     for epoch in range(num_epochs):
         for i, (images, labels) in enumerate(train_data_global):
-            images = images.to(device)
-            labels = labels.to(device)
+            # images = images.to(device)
+            # labels = labels.to(device)
 
+            images = images
+            labels = labels
             # Forward + Backward + Optimize
             optimizer.zero_grad()
             outputs = model(images)
@@ -162,8 +174,10 @@ def main():
         correct = 0
         total = 0
         for x, labels in test_data_global:
-            x = x.to(device)
-            labels = labels.to(device)
+            # x = x.to(device)
+            # labels = labels.to(device)
+            x = x
+            labels = labels
             outputs = model(x)
             _, predicted = torch.max(outputs.data, -1)
             total += labels.size(0)

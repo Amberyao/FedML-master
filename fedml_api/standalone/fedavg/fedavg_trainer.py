@@ -25,10 +25,12 @@ class FedAvgTrainer(object):
         self.train_data_local_num_dict = train_data_local_num_dict
         self.train_data_local_dict = train_data_local_dict
         self.test_data_local_dict = test_data_local_dict
+        # train_data_local_num_dict--用户本地样本数量
         self.setup_clients(train_data_local_num_dict, train_data_local_dict, test_data_local_dict)
 
     def setup_clients(self, train_data_local_num_dict, train_data_local_dict, test_data_local_dict):
         logging.info("############setup_clients (START)#############")
+        # client_num_per_round 每轮工作的worker数
         for client_idx in range(self.args.client_num_per_round):
             c = Client(client_idx, train_data_local_dict[client_idx], test_data_local_dict[client_idx],
                        train_data_local_num_dict[client_idx], self.args, self.device, self.model)
@@ -46,6 +48,7 @@ class FedAvgTrainer(object):
         return client_indexes
 
     def train(self):
+        # torch.nn.Module模块中的state_dict变量存放训练过程中需要学习的权重和偏执系数，
         w_global = self.model.state_dict()
         for round_idx in range(self.args.comm_round):
             logging.info("################Communication round : {}".format(round_idx))

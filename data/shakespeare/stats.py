@@ -8,6 +8,7 @@ import os
 
 import numpy as np
 from scipy import stats
+import matplotlib.pyplot as plt
 
 parser = argparse.ArgumentParser()
 
@@ -61,7 +62,8 @@ def print_dataset_stats(name):
     print('num_samples (skewness): %.2f' % stats.skew(num_samples))
 
     bins = [0, 20, 40, 60, 80, 100, 120, 140, 160, 180, 200]
-    if args.name == 'shakespeare':
+    # if args.name == 'shakespeare':
+    if name == 'shakespeare':
         bins = [0, 2000, 4000, 6000, 8000, 10000, 12000, 14000, 16000, 18000, 20000]
     if args.name == 'nist':
         bins = [0, 20, 40, 60, 80, 100, 120, 140, 160, 180, 200, 220, 240, 260, 280, 300, 320, 340, 360, 380, 400, 420,
@@ -73,8 +75,8 @@ def print_dataset_stats(name):
         print(e, "\t", h)
 
     # parent_path = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
-    # data_dir = os.path.join(parent_path, 'data', name, 'data')
-
+    # #　data_dir = os.path.join(parent_path, 'data', name, 'data')
+    # data_dir = os.path.join(parent_path, name)
     # plt.hist(num_samples, bins=bins)
     # fig_name = "%s_hist_nolabel.png" % name
     # fig_dir = os.path.join(data_dir, fig_name)
@@ -88,3 +90,4 @@ def print_dataset_stats(name):
 
 
 print_dataset_stats(args.name)
+# print_dataset_stats('shakespeare')

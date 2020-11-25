@@ -17,7 +17,7 @@ train_file_path = '../../../data/FederatedEMNIST/emnist_train.h5'
 test_file_path = '../../../data/FederatedEMNIST/emnist_test.h5'
 
 
-def get_client_map(client_id=None, client_num=None):
+def  get_client_map(client_id=None, client_num=None):
     global client_map
     if client_map == None:
         random.shuffle(client_id)
