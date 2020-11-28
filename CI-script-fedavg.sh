@@ -43,8 +43,9 @@ sh run_fedavg_standalone_pytorch.sh 0 2 2 4 mnist ./../../../data/mnist lr heter
 # sh run_fedavg_standalone_pytorch.sh 0 2 4 shakespeare ./../../../data/shakespeare rnn hetero 1 1 0.8 sgd 1
 # sh run_fedavg_standalone_pytorch.sh 0 2 2 4 femnist ./../../../data/FederatedEMNIST cnn hetero 1 1 0.03 sgd 1
 # sh run_fedavg_standalone_pytorch.sh 0 2 2 4 fed_shakespeare ./../../../data/fed_shakespeare rnn hetero 1 1 0.8 sgd 1
+# sh run_fedavg_standalone_pytorch.sh 0 2 2 4 fed_cifar100 ./../../../data/fed_cifar100 resnet18_gn hetero 1 1 0.03 adam 1
 sh run_fedavg_standalone_pytorch.sh 0 2 2 4 fed_cifar100 ./../../../data/fed_cifar100 resnet18_gn hetero 1 1 0.03 adam 1
-sh run_fedavg_standalone_pytorch.sh 0 10 10 4 fed_cifar100 ./../../../data/cifar100 resnet56 hetero 10 1 0.03 adam 0
+sh run_fedavg_standalone_pytorch.sh 0 10 10 128 fed_cifar10 ./../../../data/cifar100 resnet56 hetero 10 1 0.03 adam 1
 # sh run_fedavg_standalone_pytorch.sh 0 1 1 -1 mnist ./../../../data/mnist lr hetero 10 1 0.03 sgd 0
 
 
